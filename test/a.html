@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 打开数据库
+        const request = indexedDB.open('mydb', 1);
+
+        request.onupgradeneeded = event => {
+        const db = event.target.result;
+
+        // 创建对象仓库
+        db.createObjectStore('books', { keyPath: 'id' });
+        };
+
+        request.onsuccess = event => {
+        const db = event.target.result;
+
+        // 添加数据
+        addBook(db);
+        
+        // 查询数据
+        queryBook(db);
+
+        // 更新数据 
+        updateBook(db);
+
+        // 删除数据
+        deleteBook(db);
+
+        };
+
+        // 添加函数
+        function addBook(db) {
+            const transaction = db.transaction('books', 'readwrite');
+            const store = transaction.objectStore('books');
+
+            store.add({
+                id: 1,
+                title: 'Book One'
+            });
+        }
+
+        // 查询函数
+        function queryBook(db) {
+            const transaction = db.transaction('books');
+            const store = transaction.objectStore('books');
+
+            const request = store.get(1);
+
+            request.onsuccess = event => {
+                console.log('查询结果:', event.target.result); 
+            }
+        }
+
+        // 更新函数
+        function updateBook(db) {
+        // ...
+        }
+
+        // 删除函数 
+        function deleteBook(db) {
+        // ...
+        }
+    </script>
+</body>
+</html>

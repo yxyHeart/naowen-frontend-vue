@@ -1,12 +1,18 @@
 export interface CreateTableRequestData {
     username: string
     password: string
+    roles:string
+    phone:string
+    email:string
   }
   
   export interface UpdateTableRequestData {
     id: string
     username: string
     password?: string
+    roles?:string
+    phone?:string
+    email?:string
   }
   
   export interface GetTableRequestData {
@@ -30,6 +36,7 @@ export interface CreateTableRequestData {
     username: string
   }
   
+
   export type GetTableResponseData = ApiResponseData<{
     list: GetTableData[]
     total: number

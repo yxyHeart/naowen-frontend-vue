@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { reactive, ref, watch } from "vue"
-import { createTableDataApi, deleteTableDataApi, updateTableDataApi, getTableDataApi } from "@/api/table"
-import { type GetTableData } from "@/api/table/types/table"
+import {   } from "@/api/table"
+import { updateTableDataApiV2 as updateTableDataApi, deleteTableDataApiV2 as deleteTableDataApi,createTableDataApiV2 as createTableDataApi, getTableDataApiV2 as getTableDataApi } from "@/api/table"
+import { type GetTableData, type GetTableResponseData} from "@/api/table/types/table"
 import { type FormInstance, type FormRules, ElMessage, ElMessageBox } from "element-plus"
 import { Search, Refresh, CirclePlus, Delete, Download, RefreshRight } from "@element-plus/icons-vue"
 import { usePagination } from "@/hooks/usePagination.ts"
@@ -19,7 +20,11 @@ const dialogVisible = ref<boolean>(false)
 const formRef = ref<FormInstance | null>(null)
 const formData = reactive({
   username: "",
-  password: ""
+  password: "",
+  phone:"",
+  email:"",
+  roles:""
+
 })
 const formRules: FormRules = reactive({
   username: [{ required: true, trigger: "blur", message: "请输入用户名" }],
@@ -40,7 +45,10 @@ const handleCreate = () => {
       } else {
         updateTableDataApi({
           id: currentUpdateId.value,
-          username: formData.username
+          username: formData.username,
+          roles:formData.roles,
+          phone:formData.phone,
+          email:formData.email
         })
           .then(() => {
             ElMessage.success("修改成功")
@@ -82,6 +90,9 @@ const currentUpdateId = ref<undefined | string>(undefined)
 const handleUpdate = (row: GetTableData) => {
   currentUpdateId.value = row.id
   formData.username = row.username
+  formData.roles = row.roles
+  formData.phone = row.phone
+  formData.email = row.email
   dialogVisible.value = true
 }
 //#endregion
@@ -93,6 +104,7 @@ const searchData = reactive({
   username: "",
   phone: ""
 })
+
 const getTableData = () => {
   loading.value = true
   getTableDataApi({
@@ -103,8 +115,8 @@ const getTableData = () => {
   })
     .then((res) => {
       console.log(res)
-      paginationData.total = res.data.total
-      tableData.value = res.data.list
+      paginationData.total = (res as GetTableResponseData).data.total
+      tableData.value = (res as GetTableResponseData).data.list
     })
     .catch(() => {
       tableData.value = []
@@ -211,6 +223,16 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
         <el-form-item prop="password" label="密码" v-if="currentUpdateId === undefined">
           <el-input v-model="formData.password" placeholder="请输入" />
         </el-form-item>
+        <el-form-item prop="roles" label="角色">
+          <el-input v-model="formData.roles" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item prop="phone" label="手机号">
+          <el-input v-model="formData.phone" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item prop="email" label="邮箱">
+          <el-input v-model="formData.email" placeholder="请输入" />
+        </el-form-item>
+        
       </el-form>
       <template #footer>
         <el-button @click="dialogVisible = false">取消</el-button>
