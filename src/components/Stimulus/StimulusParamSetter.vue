@@ -391,6 +391,7 @@ const handleClickSubmitParams = async () => {
     });
     return 
   }
+
   createStimulusParamsApi({
     subject:form.subject,
     paradigm: curParadigm.value,
@@ -406,7 +407,8 @@ const handleClickSubmitParams = async () => {
   .then((err)=>{
     console.log(err)
   })
-    
+
+console.log(store.getters.mixStimulusAllTime)
 };
 </script>
 <style scoped>

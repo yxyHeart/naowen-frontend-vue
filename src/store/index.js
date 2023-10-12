@@ -77,15 +77,12 @@ export default createStore({
     },
     mixStimulusAllTime(state) {
       return (
-        ((state.mixStimulusSsvepTrials * 3 + 1
-          + state.mixStimulusTeethTrials * state.mixStimulusTeethDuration + 1
-          + state.mixStimulusRsvpTrials * state.mixStimulusRsvpDuration
-          +10
-          ) *
-          state.mixStimulusAllTrials -
-          10) *
-        1000
-      );
+        ((state.mixStimulusSsvepTrials * 3 + Math.max(0, state.mixStimulusSsvepTrials-1) * 1
+        + state.mixStimulusTeethTrials * state.mixStimulusTeethDuration + Math.max(0, state.mixStimulusTeethTrials-1)*1
+        + state.mixStimulusRsvpTrials * state.mixStimulusRsvpDuration + Math.max(0, state.mixStimulusRsvpTrials-1)*1
+        +(state.mixStimulusSsvepTrials > 0?1:0 + state.mixStimulusTeethTrials>0?1:0 + state.mixStimulusRsvpTrials>0?1:0 -1) *1
+        + 10
+        ) * state.mixStimulusAllTrials - 10) * 1000);
     },
     mixStimulusOneTrialTime(state) {
       return (state.mixStimulusSsvepTrials * 3 + Math.max(0, state.mixStimulusSsvepTrials-1) * 1
