@@ -1,5 +1,5 @@
 <template>
-  <RelaxStatus v-if="relaxStartFlag" />
+  <RelaxStatus v-if="relaxStartFlag" :relaxTime="relaxTime"/>
   <MixStimulus :mixStimulusMultiTrialsStartFlag="mixStimulusMultiTrialsStartFlag" />
 </template>
 
@@ -40,10 +40,12 @@ const mixStimulusOneTrialTime: Ref<number> = computed(() => {
   return store.getters.mixStimulusOneTrialTime;
 });
 
+const relaxTime = ref<number>(10)
 const startExperiment = async () => {
   for (let i = 0; i < mixStimulusAllTrials.value; i++) {
     if (i !== 0) {
       // 休息10s
+      relaxTime.value=10
       relaxStartFlag.value = true;
       try {
         await Promise.race([

@@ -1,5 +1,5 @@
 <template>
-  <RelaxStatus v-if="relaxStartFlag" />
+  <RelaxStatus v-if="relaxStartFlag" :relaxTime="relaxTime"/>
   <SSVEPStimulus v-if="ssvepStartFlag" />
   <TeethStimulus v-if="teethStartFlag" />
   <EyeStimulus v-if="eyeStartFlag" />
@@ -64,6 +64,7 @@ const mixStimulusRsvpDuration = computed(()=>{
   return store.state.mixStimulusRsvpDuration
 })
 
+const relaxTime = ref<number>(1)
 const startExperiment = async () => {
   for (let i = 0; i < mixStimulusSsvepTrials.value; i++) {
     // console.log(i)
@@ -87,6 +88,7 @@ const startExperiment = async () => {
 
     if(i===mixStimulusSsvepTrials.value-1) continue
     // 休息1s
+    relaxTime.value = 1
     relaxStartFlag.value = true;
     try {
       await Promise.race([
@@ -104,6 +106,7 @@ const startExperiment = async () => {
   }
   
     // 休息1s
+  relaxTime.value = 1
   relaxStartFlag.value = true;
   try {
     await Promise.race([
@@ -119,7 +122,6 @@ const startExperiment = async () => {
   }
   relaxStartFlag.value = false;
 
-  console.log(mixStimulusTeethTrials.value)
   // 咬牙开始
   for(let iter = 0;iter<mixStimulusTeethTrials.value;++iter){
     console.log(iter)
@@ -137,9 +139,10 @@ const startExperiment = async () => {
       return;
     }
     teethStartFlag.value = false;
-    
+
     if(iter === mixStimulusTeethTrials.value - 1) continue
     // 休息1s
+    relaxTime.value = 1
     relaxStartFlag.value = true;
     try {
       await Promise.race([
