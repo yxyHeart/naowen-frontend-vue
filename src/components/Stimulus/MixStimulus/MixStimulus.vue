@@ -124,7 +124,6 @@ const startExperiment = async () => {
 
   // 咬牙开始
   for(let iter = 0;iter<mixStimulusTeethTrials.value;++iter){
-    console.log(iter)
     teethStartFlag.value = true;
     try {
       await Promise.race([
@@ -215,4 +214,6 @@ watch(stimulusStartFlag, (newStatus) => {
     startExperiment();
   }
 });
+
+
 </script>
