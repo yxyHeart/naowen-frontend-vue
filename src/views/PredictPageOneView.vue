@@ -50,14 +50,14 @@ import { useStore } from "vuex";
 import { ElMessage, ElLoading } from "element-plus";
 import RsvpStimulus from "@/components/Stimulus/RsvpStimulus.vue";
 import MiStimulus from "@/components/Stimulus/MiStimulus.vue";
-// import SSVEPStimulus from '@/components/Stimulus/SSVEPStimulus40.vue';
 import SSVEPStimulusWithRelax from "@/components/Stimulus/SSVEPStimulusWithRelax.vue";
 import ParadigmSelector from "@/components/ParadigmSelector.vue";
-import http from "@/utils/http.js";
 import MixStimulus from "@/components/Stimulus/MixStimulus/MixStimulus.vue";
 import StimulusParamSetter from "@/components/Stimulus/StimulusParamSetter.vue";
 import RelaxStimulus from "@/components/Stimulus/RelaxStimulus.vue";
 import MixStimulusWithRelax from "@/components/Stimulus/MixStimulus/MixStimulusWithRelax.vue";
+import { bcigoApi, startPredictApi } from "@/api/experiment";
+
 const store = useStore();
 
 const curParadigm = computed(() => {
@@ -103,44 +103,33 @@ const startRecord = async() => {
   const waitExperimentStartTime = 5 * 1000
   startRecordPredictCountDownShowFlag.value = true
   startRecordPredictDeadline.value = Date.now() + waitExperimentStartTime
-  const connectDeviceUrl = "/api/bcigo";
-  await http
-    .get(connectDeviceUrl)
+  bcigoApi()
   await new Promise((res)=>{
     setTimeout(res,waitExperimentStartTime)
   })
-  const url = "/api/startPredict";
-  await http
-    .get(url)
-    .then(function (data: any) {
-      if (data.code == 1)
-        ElMessage({
-          message: data.data,
-          type: "error",
-        });
-      else {
-        ElMessage({
-          message: "开始采集脑电数据",
-          type: "success",
-        });
-      }
-    })
-    .catch(function (error: any) {
-      ElMessage({
-        message: error,
-        type: "error",
-      });
+  startPredictApi()
+  .then(()=>{
+    ElMessage({
+      message: "开始采集脑电数据",
+      type: "success",
     });
+  })
+  .catch(function (error: any) {
+    ElMessage({
+      message: error,
+      type: "error",
+    });
+  });
     
-    const loading = ElLoading.service({
-      lock: true,
-      text: "Loading",
-      background: "rgba(0, 0, 0, 0.7)",
-    });
+  const loading = ElLoading.service({
+    lock: true,
+    text: "Loading",
+    background: "rgba(0, 0, 0, 0.7)",
+  });
 
-    setTimeout(() => {
-      loading.close();
-    }, 200);
+  setTimeout(() => {
+    loading.close();
+  }, 200);
 
   
 
@@ -151,9 +140,8 @@ const startRecord = async() => {
     return store.getters.mixStimulusOneTrialTime
   })
   setTimeout(() => {
-    console.log('predict1')
     store.commit('startPredict')
-  }, 10000);
+  }, mixStimulusOneTrialTime.value);
   setTimeout(()=>{
 
     let timer = setInterval(()=>{
@@ -162,11 +150,10 @@ const startRecord = async() => {
         clearInterval(timer)
         return
       }
-      console.log('predict2')
       store.commit('startPredict')
 
     },mixStimulusOneTrialTime.value + 10 * 1000)
-  },10000)
+  },mixStimulusOneTrialTime.value)
 
   setTimeout(()=>{
     store.commit('startPredict')

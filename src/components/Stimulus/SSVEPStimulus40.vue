@@ -7,7 +7,7 @@
       :style="
         {
           animationIterationCount: stimulusStartFlag ? 'infinite' : '1',
-          animationDuration: allFrequency[num],
+          animationDuration: freqs[num],
         } as any
       "
     >
@@ -78,22 +78,17 @@ const getChar = (num: number) => {
   return fuhao[num];
 };
 
-const ssvepStartFrequency = computed(() => {
-  return store.state.ssvepStartFrequency;
+
+
+const freqs: Ref<number[]> = computed(() => {
+  
+  const ret = store.getters.ssvepFrequencies.map((freq: number) => {
+    return freq.toString() + "s";
+  });
+  return ret
 });
 
-const ssvepIntervalFrequency = computed(() => {
-  return store.state.ssvepIntervalFrequency;
-});
 
-const allFrequency: Ref<number[]> = computed(() => {
-  let ans = new Array();
-  for (let i = 0; i < 40; ++i) {
-    let freq = ssvepStartFrequency.value + ssvepIntervalFrequency.value * i;
-    ans.push((1 / freq).toString() + "s");
-  }
-  return ans;
-});
 </script>
 
 <style scoped lang="scss">

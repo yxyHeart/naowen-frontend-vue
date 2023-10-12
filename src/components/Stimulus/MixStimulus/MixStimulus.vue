@@ -9,7 +9,8 @@
 <script lang="ts" setup>
 import RsvpStimulus from "@/components/Stimulus/RsvpStimulusShort.vue";
 // import RsvpStimulus from "@/components/Stimulus/P300Speller.vue";
-import SSVEPStimulus from "@/components/Stimulus/SSVEPStimulus9.vue";
+// import SSVEPStimulus from "@/components/Stimulus/SSVEPStimulus9.vue";
+import SSVEPStimulus from "@/components/Stimulus/SSVEPStimulus4.vue";
 import RelaxStatus from "@/components/Stimulus/RelaxStatus.vue";
 import TeethStimulus from "./TeethStimulus.vue";
 import EyeStimulus from "./EyeStimulus.vue";
@@ -46,24 +47,26 @@ const checkIsExperimentStop = (flag: Ref<boolean>, delayTime: number) => {
     }, delayTime); // 3000ms后自动 resolve
   });
 };
-const startExperiment = async () => {
-  const n_trial = store.state.mixStimulusSsvepTrials;
-  for (let i = 0; i < n_trial; i++) {
-    // 休息1s
-    // relaxStartFlag.value = true
-    // try{
-    //     await Promise.race([
-    //                     new Promise((resolve)=>{setTimeout(resolve, 1000)}),
-    //                     checkIsExperimentStop(stimulusStartFlag,1000)
-    //                 ]
-    //     )
-    // }catch(error){
-    //     relaxStartFlag.value = false
-    //     console.log(error)
-    //     return
-    // }
-    // relaxStartFlag.value = false
 
+const mixStimulusSsvepTrials = computed(()=>{
+  return store.state.mixStimulusSsvepTrials
+})
+const mixStimulusTeethTrials = computed(()=>{
+  return store.state.mixStimulusTeethTrials
+})
+const mixStimulusTeethDuration = computed(()=>{
+  return store.state.mixStimulusTeethDuration
+})
+const mixStimulusRsvpTrials = computed(()=>{
+  return store.state.mixStimulusRsvpTrials
+})
+const mixStimulusRsvpDuration = computed(()=>{
+  return store.state.mixStimulusRsvpDuration
+})
+
+const startExperiment = async () => {
+  for (let i = 0; i < mixStimulusSsvepTrials.value; i++) {
+    // console.log(i)
     // ssvep 开始
     ssvepStartFlag.value = true;
     
@@ -81,6 +84,23 @@ const startExperiment = async () => {
     }
 
     ssvepStartFlag.value = false;
+
+    if(i===mixStimulusSsvepTrials.value-1) continue
+    // 休息1s
+    relaxStartFlag.value = true;
+    try {
+      await Promise.race([
+        new Promise((resolve) => {
+          setTimeout(resolve, 1000);
+        }),
+        checkIsExperimentStop(stimulusStartFlag, 1000),
+      ]);
+    } catch (error) {
+      relaxStartFlag.value = false;
+      console.log(error);
+      return;
+    }
+    relaxStartFlag.value = false;
   }
   
     // 休息1s
@@ -99,15 +119,17 @@ const startExperiment = async () => {
   }
   relaxStartFlag.value = false;
 
+  console.log(mixStimulusTeethTrials.value)
   // 咬牙开始
-  for(let iter = 0;iter<3;++iter){
+  for(let iter = 0;iter<mixStimulusTeethTrials.value;++iter){
+    console.log(iter)
     teethStartFlag.value = true;
     try {
       await Promise.race([
         new Promise((resolve) => {
-          setTimeout(resolve, 500);
+          setTimeout(resolve, mixStimulusTeethDuration.value * 1000);
         }),
-        checkIsExperimentStop(stimulusStartFlag, 500),
+        checkIsExperimentStop(stimulusStartFlag, mixStimulusTeethDuration.value * 1000),
       ]);
     } catch (error) {
       teethStartFlag.value = false;
@@ -115,12 +137,23 @@ const startExperiment = async () => {
       return;
     }
     teethStartFlag.value = false;
-    if(iter!==2){
-      
+    
+    if(iter === mixStimulusTeethTrials.value - 1) continue
+    // 休息1s
+    relaxStartFlag.value = true;
+    try {
+      await Promise.race([
+        new Promise((resolve) => {
+          setTimeout(resolve, 1000);
+        }),
+        checkIsExperimentStop(stimulusStartFlag, 1000),
+      ]);
+    } catch (error) {
+      relaxStartFlag.value = false;
+      console.log(error);
+      return;
     }
-    await new Promise((res)=>{
-      setTimeout(res,500)
-    })
+    relaxStartFlag.value = false;
   }
 
 
@@ -141,15 +174,15 @@ const startExperiment = async () => {
   // eyeStartFlag.value = false;
 
   // rsvp开始
-  for(let iter=0;iter<2;++iter){
+  for(let iter=0;iter<mixStimulusRsvpTrials.value;++iter){
 
     rsvpStartFlag.value = true;
     try {
       await Promise.race([
         new Promise((resolve) => {
-          setTimeout(resolve, 1250);
+          setTimeout(resolve, mixStimulusRsvpDuration.value * 1000);
         }),
-        checkIsExperimentStop(stimulusStartFlag, 1250),
+        checkIsExperimentStop(stimulusStartFlag, mixStimulusRsvpDuration.value * 1000),
       ]);
     } catch (error) {
       rsvpStartFlag.value = false;
@@ -158,11 +191,11 @@ const startExperiment = async () => {
     }
     rsvpStartFlag.value = false;
 
-    if(iter==0){
-      await new Promise((res)=>{
-      setTimeout(res,500)
-    })
-    }
+    // if(iter==0){
+    //   await new Promise((res)=>{
+    //   setTimeout(res,500)
+    // })
+    // }
   }
 
 

@@ -7,7 +7,6 @@
   <el-dialog v-model="dialogFormVisible" title="实验参数设置">
     <el-form
       :model="form"
-      class="flex flex-col justify-center items-center h-[100%]"
     >
       <el-form-item label="Subject Name" :label-width="formLabelWidth" required prop="subject">
         <el-input v-model="form.subject" />
@@ -15,7 +14,7 @@
 
       <!-- mixStimulus -->
       <el-form-item
-        label="All Trials"
+        label="MixStimulus All Trials"
         :label-width="formLabelWidth"
         v-if="curParadigm === 'mixStimulus'"
       >
@@ -24,28 +23,16 @@
           placeholder="Please select all trial"
         >
           <el-option label="2" value="2" />
+          <el-option label="5" value="5" />
           <el-option label="20" value="20" />
           <el-option label="25" value="25" />
         </el-select>
       </el-form-item>
 
-      <el-form-item
-        label="RSVP Ferquency"
-        :label-width="formLabelWidth"
-        v-if="curParadigm === 'mixStimulus'"
-      >
-        <el-select
-          v-model="form.mixStimulusRsvpFrequency"
-          placeholder="Please select rsvp frequency"
-        >
-          <el-option label="2hz" value="2" />
-          <el-option label="3.3hz" value="3.3" />
-          <el-option label="5hz" value="5" />
-        </el-select>
-      </el-form-item>
+
 
       <el-form-item
-        label="SSVEP Trials"
+        label="MixStimulus SSVEP Trials"
         :label-width="formLabelWidth"
         v-if="curParadigm === 'mixStimulus'"
       >
@@ -60,7 +47,7 @@
 
 
       <el-form-item
-        label="SSVEP Trial Duration"
+        label="MixStimulus SSVEP Trial Duration"
         :label-width="formLabelWidth"
         v-if="curParadigm === 'mixStimulus'"
       >
@@ -90,6 +77,52 @@
         <el-input v-model="form.mixStimulusSsvepIntervalFrequency" />
       </el-form-item>
 
+      <el-form-item
+        label="MixStimulus Teeth Trials"
+        :label-width="formLabelWidth"
+        v-if="curParadigm === 'mixStimulus'"
+      >
+        <el-input v-model="form.mixStimulusTeethTrials" />
+      </el-form-item>
+
+      <el-form-item
+        label="MixStimulus Teeth Duration"
+        :label-width="formLabelWidth"
+        v-if="curParadigm === 'mixStimulus'"
+      >
+        <el-input v-model="form.mixStimulusTeethDuration" />
+      </el-form-item>
+
+      <el-form-item
+        label="RSVP Ferquency"
+        :label-width="formLabelWidth"
+        v-if="curParadigm === 'mixStimulus'"
+      >
+        <el-select
+          v-model="form.mixStimulusRsvpFrequency"
+          placeholder="Please select rsvp frequency"
+        >
+          <el-option label="2hz" value="2" />
+          <el-option label="3.3hz" value="3.3" />
+          <el-option label="5hz" value="5" />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item
+        label="MixStimulus Rsvp Trials"
+        :label-width="formLabelWidth"
+        v-if="curParadigm === 'mixStimulus'"
+      >
+        <el-input v-model="form.mixStimulusRsvpTrials" />
+      </el-form-item>
+
+      <el-form-item
+        label="MixStimulus Rsvp Duration"
+        :label-width="formLabelWidth"
+        v-if="curParadigm === 'mixStimulus'"
+      >
+        <el-input v-model="form.mixStimulusRsvpDuration" />
+      </el-form-item>
       <!-- ssvep -->
       <el-form-item
         label="SSVEP Trials"
@@ -224,8 +257,7 @@ const formLabelWidth = "300px";
 const store = useStore();
 const curParadigm = computed(() => {
   return store.state.paradigm;
-});
-
+})
 const curDuration = computed(() => {
   if (curParadigm.value === "mi") {
     return store.getters.miAllTime;
@@ -240,6 +272,8 @@ const curDuration = computed(() => {
   }
 });
 
+
+
 interface Form {
   subject: string;
   mixStimulusAllTrials: number;
@@ -248,6 +282,10 @@ interface Form {
   mixStimulusSsvepTrialsDuration:number,
   mixStimulusSsvepStartFrequency:number,
   mixStimulusSsvepIntervalFrequency:number,
+  mixStimulusTeethTrials:number,
+  mixStimulusTeethDuration:number,
+  mixStimulusRsvpTrials:number,
+  mixStimulusRsvpDuration:number,
 
   ssvepTrials: number;
   ssvepTrialsDuration: number;
@@ -268,66 +306,83 @@ interface Form {
 }
 const form: Form = reactive({
   //mixStimulus
-  mixStimulusAllTrials: 25,
-  mixStimulusRsvpFrequency: 5,
-  mixStimulusSsvepTrials:1,
-  mixStimulusSsvepTrialsDuration:3,
-  mixStimulusSsvepStartFrequency:8,
-  mixStimulusSsvepIntervalFrequency:2,
+  mixStimulusAllTrials:computed(()=>store.state.mixStimulusAllTrials).value,
+  mixStimulusRsvpFrequency: computed(()=>store.state.mixStimulusRsvpFrequency).value,
+  mixStimulusSsvepTrials:computed(()=>store.state.mixStimulusSsvepTrials).value,
+  mixStimulusSsvepTrialsDuration:computed(()=>store.state.mixStimulusSsvepTrialsDuration).value,
+  mixStimulusSsvepStartFrequency:computed(()=>store.state.mixStimulusSsvepStartFrequency).value,
+  mixStimulusSsvepIntervalFrequency:computed(()=>store.state.mixStimulusSsvepIntervalFrequency).value,
+  mixStimulusTeethTrials:computed(()=>store.state.mixStimulusTeethTrials).value,
+  mixStimulusTeethDuration:computed(()=>store.state.mixStimulusTeethDuration).value,
+  mixStimulusRsvpTrials:computed(()=>store.state.mixStimulusRsvpTrials).value,
+  mixStimulusRsvpDuration:computed(()=>store.state.mixStimulusRsvpDuration).value,
   // ssvep
-  ssvepTrials: 10,
-  ssvepTrialsDuration: 3,
-  ssvepStartFrequency: 8,
-  ssvepIntervalFrequency: 2,
+  ssvepTrials: computed(()=>store.state.ssvepTrials).value,
+  ssvepTrialsDuration: computed(()=>store.state.ssvepTrialsDuration).value,
+  ssvepStartFrequency: computed(()=>store.state.ssvepStartFrequency).value,
+  ssvepIntervalFrequency: computed(()=>store.state.ssvepIntervalFrequency).value,
   //rsvp
-  rsvpFrequency: 5,
-  rsvpSessions: 2,
+  rsvpFrequency: computed(()=>store.state.rsvpFrequency).value,
+  rsvpSessions: computed(()=>store.state.rsvpSessions).value,
   //mi
-  miSessions: 2,
-  miTrials: 5,
-  miTaskPromptTime: 2,
-  miMotorImageryTime: 4,
-  miRelaxTime: 2,
+  miSessions: computed(()=>store.state.miSessions).value,
+  miTrials: computed(()=>store.state.miTrials).value,
+  miTaskPromptTime: computed(()=>store.state.miTaskPromptTime).value,
+  miMotorImageryTime: computed(()=>store.state.miMotorImageryTime).value,
+  miRelaxTime: computed(()=>store.state.miRelaxTime).value,
   //relax
-  relaxTime: 30,
+  relaxTime: computed(()=>store.state.relaxTime).value,
   //subjectName
-  subject: "",
+  subject: computed(()=>store.state.subject).value,
 });
+
+const mixStimulusOneTrialTime = computed(()=>{
+  return store.getters.mixStimulusOneTrialTime
+})
 
 const handleClickSubmitParams = async () => {
   dialogFormVisible.value = false;
-  store.commit("setMixStimulus", {
-    mixStimulusAllTrials: form.mixStimulusAllTrials,
-    mixStimulusRsvpFrequency: form.mixStimulusRsvpFrequency,
-    mixStimulusSsvepTrials: form.mixStimulusSsvepTrials,
-    mixStimulusSsvepTrialsDuration: form.mixStimulusSsvepTrialsDuration,
-    mixStimulusSsvepStartFrequency:form.mixStimulusSsvepStartFrequency,
-    mixStimulusSsvepIntervalFrequency:form.mixStimulusSsvepIntervalFrequency,
-  });
+  const mixStimulusInfo = {
+    mixStimulusAllTrials: Number(form.mixStimulusAllTrials),
+    mixStimulusRsvpFrequency: Number(form.mixStimulusRsvpFrequency),
+    mixStimulusSsvepTrials: Number(form.mixStimulusSsvepTrials),
+    mixStimulusSsvepTrialsDuration: Number(form.mixStimulusSsvepTrialsDuration),
+    mixStimulusSsvepStartFrequency:Number(form.mixStimulusSsvepStartFrequency),
+    mixStimulusSsvepIntervalFrequency:Number(form.mixStimulusSsvepIntervalFrequency),
+    mixStimulusTeethTrials:Number(form.mixStimulusTeethTrials),
+    mixStimulusTeethDuration:Number(form.mixStimulusTeethDuration),
+    mixStimulusRsvpTrials:Number(form.mixStimulusRsvpTrials),
+    mixStimulusRsvpDuration:Number(form.mixStimulusRsvpDuration),
+  }
+  store.commit("setMixStimulus", mixStimulusInfo);
 
-  store.commit("setSsvep", {
+  const ssvepInfo = {
     ssvepTrials: form.ssvepTrials,
     ssvepTrialsDuration: form.ssvepTrialsDuration,
     ssvepStartFrequency: form.ssvepStartFrequency,
     ssvepIntervalFrequency: form.ssvepIntervalFrequency,
-  });
+  }
+  store.commit("setSsvep", ssvepInfo);
 
-  store.commit("setRsvp", {
+  const rsvpInfo = {
     rsvpFrequency: form.rsvpFrequency,
     rsvpSessions: form.rsvpSessions,
-  });
+  }
+  store.commit("setRsvp", rsvpInfo);
 
-  store.commit("setMi", {
+  const miInfo = {
     miSessions: form.miSessions,
     miTrials: form.miTrials,
     miTaskPromptTime: form.miTaskPromptTime,
     miMotorImageryTime: form.miMotorImageryTime,
     miRelaxTime: form.miRelaxTime,
-  });
+  }
+  store.commit("setMi", miInfo);
 
-  store.commit("setRelax", {
+  const relaxInfo = {
     relaxTime: form.relaxTime,
-  });
+  }
+  store.commit("setRelax", relaxInfo);
   store.commit("setSubject", form.subject);
   if(form.subject === ''){
     ElMessage({
@@ -339,7 +394,14 @@ const handleClickSubmitParams = async () => {
   createStimulusParamsApi({
     subject:form.subject,
     paradigm: curParadigm.value,
+    oneTrialDuration:mixStimulusOneTrialTime.value/1000,
     duration: curDuration.value, 
+    ...mixStimulusInfo,
+    ...rsvpInfo,
+    ...ssvepInfo,
+    ...miInfo,
+    ...relaxInfo,
+
   })
   .then((err)=>{
     console.log(err)

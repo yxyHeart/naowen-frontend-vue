@@ -33,7 +33,7 @@ const checkIsExperimentStop = (flag: Ref<boolean>, delayTime: number) => {
     }, delayTime); // 3000ms后自动 resolve
   });
 };
-const mixTrials: Ref<number> = computed(() => {
+const mixStimulusAllTrials: Ref<number> = computed(() => {
   return store.state.mixStimulusAllTrials;
 });
 const mixStimulusOneTrialTime: Ref<number> = computed(() => {
@@ -41,8 +41,7 @@ const mixStimulusOneTrialTime: Ref<number> = computed(() => {
 });
 
 const startExperiment = async () => {
-
-  for (let i = 0; i < mixTrials.value; i++) {
+  for (let i = 0; i < mixStimulusAllTrials.value; i++) {
     if (i !== 0) {
       // 休息10s
       relaxStartFlag.value = true;

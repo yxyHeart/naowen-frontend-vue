@@ -58,6 +58,7 @@ import MixStimulus from "@/components/Stimulus/MixStimulus/MixStimulus.vue";
 import StimulusParamSetter from "@/components/Stimulus/StimulusParamSetter.vue";
 import RelaxStimulus from "@/components/Stimulus/RelaxStimulus.vue";
 import MixStimulusWithRelax from "@/components/Stimulus/MixStimulus/MixStimulusWithRelax.vue";
+import { bcigoApi, startValidApi} from "@/api/experiment";
 const store = useStore();
 
 const curParadigm = computed(() => {
@@ -104,47 +105,35 @@ const startRecord = async() => {
   const waitExperimentStartTime = 5 * 1000
   startRecordValidCountDownShowFlag.value = true
   startRecordValidDeadline.value = Date.now() + waitExperimentStartTime
-  const connectDeviceUrl = "/api/bcigo";
-  await http
-    .get(connectDeviceUrl)
+  bcigoApi()
   await new Promise((res)=>{
     setTimeout(res,waitExperimentStartTime)
   })
-  const url = "/api/startValid";
-  await http
-    .get(url)
-    .then(function (data: any) {
-      if (data.code == 1)
-        ElMessage({
-          message: data.data,
-          type: "error",
-        });
-      else {
-        ElMessage({
-          message: "开始采集脑电数据",
-          type: "success",
-        });
-      }
-    })
-    .catch(function (error: any) {
-      ElMessage({
-        message: error,
-        type: "error",
-      });
+  startValidApi()
+  .then(()=>{
+    ElMessage({
+      message: "开始采集脑电数据",
+      type: "success",
     });
+  })
+  .catch(function (error: any) {
+    ElMessage({
+      message: error,
+      type: "error",
+    });
+  });
     
-    const loading = ElLoading.service({
-      lock: true,
-      text: "Loading",
-      background: "rgba(0, 0, 0, 0.7)",
-    });
+  const loading = ElLoading.service({
+    lock: true,
+    text: "Loading",
+    background: "rgba(0, 0, 0, 0.7)",
+  });
 
-    setTimeout(() => {
-      loading.close();
-    }, 200);
+  setTimeout(() => {
+    loading.close();
+  }, 200);
 
 
-  
   store.commit("startRecordValid");
   
   const mixStimulusOneTrialTime = computed(()=>{
@@ -153,9 +142,8 @@ const startRecord = async() => {
 
 
   setTimeout(() => {
-    console.log('valid')
     store.commit('startValid')
-  }, 10000);
+  }, mixStimulusOneTrialTime.value);
   setTimeout(()=>{
 
     let timer = setInterval(()=>{
@@ -164,11 +152,10 @@ const startRecord = async() => {
         clearInterval(timer)
         return
       }
-      console.log('valid')
       store.commit('startValid')
 
     },mixStimulusOneTrialTime.value + 10 * 1000)
-  },10000)
+  },mixStimulusOneTrialTime.value)
 
   setTimeout(()=>{
     store.commit('startValid')

@@ -24,7 +24,7 @@ export function deviceStatusApi(){
 
 export function createStimulusParamsApi(data:Experiment.CreateStimulusParamsRequestData){
     return request({
-        url:"setRecord",
+        url:"setParams",
         method:"post",
         data
     })
@@ -44,8 +44,28 @@ export function stopRecordApi(){
     })
 }
 
+export function startPredictApi(){
+    return request({
+        url:"startPredict",
+        method:"get",
+    })
+}
+export function startValidApi(){
+    return request({
+        url:"startValid",
+        method:"get",
+    })
+}
+
 export function getPredictDataApi(){
     return request<Experiment.GetPredictResponseData>({
+        url:"stopPredict",
+        method:"get"
+    })
+}
+
+export function getPredictNameDataApi(){
+    return request<Experiment.GetPredictNameResponseData>({
         url:"stopPredict",
         method:"get"
     })

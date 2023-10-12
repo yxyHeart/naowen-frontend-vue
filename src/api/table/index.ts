@@ -4,7 +4,7 @@ import type * as Table from "./types/table"
 /** 增 */
 export function createTableDataApi(data: Table.CreateTableRequestData) {
   return request({
-    url: "table",
+    url: "user",
     method: "post",
     data
   })
@@ -13,7 +13,7 @@ export function createTableDataApi(data: Table.CreateTableRequestData) {
 /** 删 */
 export function deleteTableDataApi(id: string) {
   return request({
-    url: `table/${id}`,
+    url: `user/${id}`,
     method: "delete"
   })
 }
@@ -21,7 +21,7 @@ export function deleteTableDataApi(id: string) {
 /** 改 */
 export function updateTableDataApi(data: Table.UpdateTableRequestData) {
   return request({
-    url: "table",
+    url: "user",
     method: "put",
     data
   })
@@ -30,7 +30,7 @@ export function updateTableDataApi(data: Table.UpdateTableRequestData) {
 /** 查 */
 export function getTableDataApi(params: Table.GetTableRequestData) {
   return request<Table.GetTableResponseData>({
-    url: "table",
+    url: "users",
     method: "get",
     params
   })
@@ -63,7 +63,8 @@ export function createTableDataApiV2(data: Table.CreateTableRequestData) {
         const store = transaction.objectStore('users');
         const getAllKeysRequest = store.getAllKeys()
         getAllKeysRequest.onsuccess = (event:Event)=>{
-          const _maxId = Math.max(...((event.target as IDBRequest).result).map((key:unknown)=>Number(key as unknown as string)))
+          
+          const _maxId = Math.max(0, ...((event.target as IDBRequest).result).map((key:unknown)=>Number(key as unknown as string)))
           store.add({
             createTime: new Date().toISOString(),
             email: email,

@@ -2,14 +2,19 @@ export interface CreateStimulusParamsRequestData {
     //被试姓名和当前范式， 是必须的参数
     subject: string,
     paradigm: string,
+    oneTrialDuration:number,
     duration:number,
     //  混合范式
     mixStimulusAllTrials?: number,
-    mixStimulusRsvpFrequency?: number, 
     mixStimulusSsvepTrials?: number, 
     mixStimulusSsvepTrialsDuration?:number,
     mixStimulusSsvepStartFrequency?:number,
     mixStimulusSsvepIntervalFrequency?: number,
+    mixStimulusTeethTrials?:number,
+    mixStimulusTeethDuration?:number,
+    mixStimulusRsvpFrequency?: number, 
+    mixStimulusRsvpTrials?:number,
+    mixStimulusRsvpDuration?:number,
     // ssvep 范式
     ssvepTrials?: number,
     ssvepTrialsDuration?: number,
@@ -32,5 +37,7 @@ export interface CreateStimulusParamsRequestData {
 export type GetDeviceStatusResponseData = ApiResponseData<string>
 
 export type GetPredictResponseData = ApiResponseData<number[]>
+
+export type GetPredictNameResponseData = ApiResponseData<string>
 
 export type GetValidResponseData = ApiResponseData<string | number | boolean>

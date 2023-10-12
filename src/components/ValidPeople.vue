@@ -52,7 +52,7 @@
         "
         class="loading"
       >
-        <a-spin tip="正在识别中... " wrapperClassName="spin" size="large">
+        <a-spin tip="正在验证中... " wrapperClassName="spin" size="large">
         </a-spin>
       </div>
     </div>

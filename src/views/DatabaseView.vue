@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { reactive, ref, watch } from "vue"
-import {   } from "@/api/table"
+// import { updateTableDataApi, deleteTableDataApi, createTableDataApi, getTableDataApi } from "@/api/table"
 import { updateTableDataApiV2 as updateTableDataApi, deleteTableDataApiV2 as deleteTableDataApi,createTableDataApiV2 as createTableDataApi, getTableDataApiV2 as getTableDataApi } from "@/api/table"
 import { type GetTableData, type GetTableResponseData} from "@/api/table/types/table"
 import { type FormInstance, type FormRules, ElMessage, ElMessageBox } from "element-plus"
@@ -145,7 +145,7 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
         <el-form-item prop="username" label="用户名">
           <el-input v-model="searchData.username" placeholder="请输入" />
         </el-form-item>
-        <el-form-item prop="phone" label="手机号">
+        <el-form-item prop="phone" label="口令">
           <el-input v-model="searchData.phone" placeholder="请输入" />
         </el-form-item>
         <el-form-item>
@@ -179,7 +179,7 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
               <el-tag v-else type="warning" effect="plain">{{ scope.row.roles }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="phone" label="手机号" align="center" />
+          <el-table-column prop="phone" label="口令" align="center" />
           <el-table-column prop="email" label="邮箱" align="center" />
           <el-table-column prop="status" label="状态" align="center">
             <template #default="scope">
@@ -226,7 +226,7 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
         <el-form-item prop="roles" label="角色">
           <el-input v-model="formData.roles" placeholder="请输入" />
         </el-form-item>
-        <el-form-item prop="phone" label="手机号">
+        <el-form-item prop="phone" label="口令">
           <el-input v-model="formData.phone" placeholder="请输入" />
         </el-form-item>
         <el-form-item prop="email" label="邮箱">

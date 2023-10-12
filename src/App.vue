@@ -99,12 +99,10 @@ window.addEventListener("beforeunload", function () {
   sessionStorage.clear();
 });
 
-const isDatabase = computed(()=>{
-  return route.path.includes('database')
-})
 
-watch(isDatabase,(newStatus,oldStatus)=>{
-  if(newStatus){
+
+watch(route,()=>{
+  if(route.path.includes('database')){
     document.body.style.overflow = 'scroll'
   }else[
     document.body.style.overflow = 'hidden'

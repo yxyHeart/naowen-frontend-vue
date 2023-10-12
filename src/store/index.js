@@ -15,11 +15,15 @@ export default createStore({
     curpath: "/",
 
     mixStimulusAllTrials: 25,
-    mixStimulusRsvpFrequency: 5, // 验证实验的混合范式中rsvp刺激的频率
     mixStimulusSsvepTrials: 1, // 验证实验的混合范式中ssvep刺激 trial的个数
     mixStimulusSsvepTrialsDuration:3,
     mixStimulusSsvepStartFrequency: 8,
     mixStimulusSsvepIntervalFrequency: 2,
+    mixStimulusTeethTrials:1,
+    mixStimulusTeethDuration:1,
+    mixStimulusRsvpFrequency: 5, // 验证实验的混合范式中rsvp刺激的频率
+    mixStimulusRsvpTrials:0,
+    mixStimulusRsvpDuration:1.5,
 
 
     ssvepTrials: 10,
@@ -43,9 +47,15 @@ export default createStore({
     mixStimulusSsvepFrequencies(state) {
       let freqs = []
       for(let i = 0;i<40;i++){
+        freqs.push(1/(state.mixStimulusSsvepStartFrequency + state.mixStimulusSsvepIntervalFrequency  * i))
+      }
+      return freqs
+    },
+    ssvepFrequencies(state){
+      let freqs = []
+      for(let i = 0;i<40;i++){
         freqs.push(1/(state.ssvepStartFrequency + state.ssvepIntervalFrequency  * i))
       }
-
       return freqs
     },
     rsvpAllTime(state) {
@@ -67,14 +77,22 @@ export default createStore({
     },
     mixStimulusAllTime(state) {
       return (
-        ((state.mixStimulusSsvepTrials * 3 + 1 + 1 * 2 + 4 + 10) *
+        ((state.mixStimulusSsvepTrials * 3 + 1
+          + state.mixStimulusTeethTrials * state.mixStimulusTeethDuration + 1
+          + state.mixStimulusRsvpTrials * state.mixStimulusRsvpDuration
+          +10
+          ) *
           state.mixStimulusAllTrials -
           10) *
         1000
       );
     },
     mixStimulusOneTrialTime(state) {
-      return (state.mixStimulusSsvepTrials * 3 + 1+ 1 * 2 + 4) * 1000;
+      return (state.mixStimulusSsvepTrials * 3 + Math.max(0, state.mixStimulusSsvepTrials-1) * 1
+         + state.mixStimulusTeethTrials * state.mixStimulusTeethDuration + Math.max(0, state.mixStimulusTeethTrials-1)*1
+         + state.mixStimulusRsvpTrials * state.mixStimulusRsvpDuration + Math.max(0, state.mixStimulusRsvpTrials-1)*1
+         +(state.mixStimulusSsvepTrials > 0?1:0 + state.mixStimulusTeethTrials>0?1:0 + state.mixStimulusRsvpTrials>0?1:0 -1) *1
+         ) * 1000;
     },
     relaxAllTime(state){
       return state.relaxTime
@@ -130,6 +148,10 @@ export default createStore({
       state.mixStimulusSsvepTrialsDuration = info.mixStimulusSsvepTrialsDuration;
       state.mixStimulusSsvepStartFrequency = info.mixStimulusSsvepStartFrequency;
       state.mixStimulusSsvepIntervalFrequency = info.mixStimulusSsvepIntervalFrequency;
+      state.mixStimulusTeethTrials = info.mixStimulusTeethTrials;
+      state.mixStimulusTeethDuration = info.mixStimulusTeethDuration;
+      state.mixStimulusRsvpTrials = info.mixStimulusRsvpTrials;
+      state.mixStimulusRsvpDuration = info.mixStimulusRsvpDuration;
     },
     setSsvep(state, info) {
       state.ssvepTrials = info.ssvepTrials;

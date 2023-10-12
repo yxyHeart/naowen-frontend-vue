@@ -24,6 +24,7 @@
       "@/*": ["src/*"],
       "vuex": ["./node_modules/vuex/types"] 
     },
+    "allowJs": true
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "types/*.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
