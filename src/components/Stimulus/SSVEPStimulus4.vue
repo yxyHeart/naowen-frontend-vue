@@ -58,9 +58,9 @@ const getSrc = (num: number) => {
 <style scoped lang="scss">
 @use "sass:math";
 @mixin s($i) {
-  border: 5px;
-  height: 13vw;
-  width: 13vw;
+  border: 2px;
+  height: 25vh;
+  width: 25vh;
   background-color: black;
   animation: a1;
   @if $i == 0 {
@@ -78,32 +78,34 @@ const getSrc = (num: number) => {
   text-align: center;
 }
 .parent {
-  height: 60vh;
+  height: 100vh;
   width: 100vw;
   display: flex;
   flex: auto;
-  margin: 3vh auto;
+  margin: 1vh auto;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   @for $i from 0 through 4 {
     .s#{$i} {
       @if $i == 0 {
+        margin-top: 2%;
         margin-left: 42%;
         margin-right: 40%;
       } @else if $i == 1 {
-        margin-left: 10%;
-        margin-right: 10%;
-        margin-top: 10vh;
-        margin-bottom: 10vh;
+        margin-left: 7%;
+        margin-right: 7%;
+        margin-top: 4%;
+        margin-bottom: 4%;
       } @else if $i == 2 {
-        margin-left: 10%;
-        margin-right: 10%;
-        margin-top: 10vh;
-        margin-bottom: 10vh;
+        margin-left: 7%;
+        margin-right: 7%;
+        margin-top: 4%;
+        margin-bottom: 4%;
       } @else if $i == 3 {
         margin-left: 42%;
         margin-right: 40%;
+        margin-bottom: 2%;
       }
       @include s($i);
       .p#{$i} {
@@ -119,20 +121,41 @@ const getSrc = (num: number) => {
   }
   @keyframes a1 {
     0% {
-      opacity: 0;
+      opacity: 50%;
     }
-    // 25%{
-    //     opacity: 100%;
-    // }
-    50% {
+    12.5%{
+      opacity: 85.3%;
+    }
+    25%{
       opacity: 100%;
     }
-    // 75%{
-    //     opacity: 100%;
-    // }
-    100% {
+    37.5%{
+      opacity: 85.3%;
+    }
+    50%{
+      opacity: 50%;
+    }
+    62.5%{
+      opacity: 14.6%;
+    }
+    75% {
       opacity: 0%;
     }
+    87.5% {
+      opacity: 14.6%;
+    }
+    100%{
+      opacity: 50%;
+    }
+    // 0% {
+    //   opacity: 0%;
+    // }
+    // 50%{
+    //   opacity: 100%;
+    // }
+    // 100%{
+    //   opacity: 0%;
+    // }
   }
 }
 </style>
