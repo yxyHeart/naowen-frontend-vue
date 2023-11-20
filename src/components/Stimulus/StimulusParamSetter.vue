@@ -36,13 +36,7 @@
         :label-width="formLabelWidth"
         v-if="curParadigm === 'mixStimulus'"
       >
-        <el-select
-          v-model="form.mixStimulusSsvepTrials"
-          placeholder="Please select ssvep trial"
-        >
-          <el-option label="1" value="1" />
-          <el-option label="2" value="2" />
-        </el-select>
+        <el-input v-model="form.mixStimulusSsvepTrials" />
       </el-form-item>
 
 
@@ -51,14 +45,8 @@
         :label-width="formLabelWidth"
         v-if="curParadigm === 'mixStimulus'"
       >
-        <el-select
-          v-model="form.mixStimulusSsvepTrialsDuration"
-          placeholder="Please select ssvep trial duration"
-        >
-          <el-option label="2" value="2" />
-          <el-option label="3" value="3" />
-          <el-option label="5" value="5" />
-        </el-select>
+        <el-input v-model="form.mixStimulusSsvepTrialsDuration" />
+
       </el-form-item>
 
       <el-form-item
@@ -78,7 +66,7 @@
       </el-form-item>
 
       <el-form-item
-        label="MixStimulus Teeth Trials"
+        label="MixStimulus Relax Trials"
         :label-width="formLabelWidth"
         v-if="curParadigm === 'mixStimulus'"
       >
@@ -86,7 +74,7 @@
       </el-form-item>
 
       <el-form-item
-        label="MixStimulus Teeth Duration"
+        label="MixStimulus Relax Duration"
         :label-width="formLabelWidth"
         v-if="curParadigm === 'mixStimulus'"
       >
@@ -94,18 +82,11 @@
       </el-form-item>
 
       <el-form-item
-        label="RSVP Ferquency"
+        label="MixStimulus RSVP Ferquency"
         :label-width="formLabelWidth"
         v-if="curParadigm === 'mixStimulus'"
       >
-        <el-select
-          v-model="form.mixStimulusRsvpFrequency"
-          placeholder="Please select rsvp frequency"
-        >
-          <el-option label="2hz" value="2" />
-          <el-option label="3.3hz" value="3.3" />
-          <el-option label="5hz" value="5" />
-        </el-select>
+        <el-input v-model="form.mixStimulusRsvpFrequency" />
       </el-form-item>
 
       <el-form-item
@@ -408,7 +389,7 @@ const handleClickSubmitParams = async () => {
     console.log(err)
   })
 
-console.log(store.getters.mixStimulusAllTime)
+
 };
 </script>
 <style scoped>

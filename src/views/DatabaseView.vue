@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { reactive, ref, watch } from "vue"
-// import { updateTableDataApi, deleteTableDataApi, createTableDataApi, getTableDataApi } from "@/api/table"
-import { updateTableDataApiV2 as updateTableDataApi, deleteTableDataApiV2 as deleteTableDataApi,createTableDataApiV2 as createTableDataApi, getTableDataApiV2 as getTableDataApi } from "@/api/table"
+import { updateTableDataApi, deleteTableDataApi, createTableDataApi, getTableDataApi } from "@/api/table"
+// import { updateTableDataApiV2 as updateTableDataApi, deleteTableDataApiV2 as deleteTableDataApi,createTableDataApiV2 as createTableDataApi, getTableDataApiV2 as getTableDataApi } from "@/api/table"
 import { type GetTableData, type GetTableResponseData} from "@/api/table/types/table"
 import { type FormInstance, type FormRules, ElMessage, ElMessageBox } from "element-plus"
 import { Search, Refresh, CirclePlus, Delete, Download, RefreshRight } from "@element-plus/icons-vue"

@@ -46,13 +46,14 @@ const images: Ref<string[]> = ref([]);
 const getImg = async () => {
   for (let i = 0; i < 1000; i++) {
     images.value.push(
-      new URL(`/src/assets/images/rsvp/${i}.jpg`, import.meta.url).href,
+      new URL(`/src/assets/images/rsvp/fruit+landspace/${i}.jpeg`, import.meta.url).href,
     );
   }
 };
 
-const targetIndex = ref(0);
-const currentIndex = ref(200);
+const allFilesLength:number = 16
+const targetIndex = ref<number>(0);
+const currentIndex = ref<number>(15);
 
 const duration = computed(() => {
   return (1 / store.state.mixStimulusRsvpFrequency) * 1000;
@@ -64,7 +65,7 @@ const startExperiment = async () => {
     await new Promise((resolve) => {
       setTimeout(resolve, duration.value);
     });
-    currentIndex.value = Math.floor(Math.random() * 1000);
+    currentIndex.value = Math.floor(Math.random() * allFilesLength);
     iterTimes--;
   }
 

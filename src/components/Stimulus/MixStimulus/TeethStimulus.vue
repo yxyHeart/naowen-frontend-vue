@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center items-center mt-[30vh] scale-[3]">
+  <div class="flex justify-center items-center mt-[40vh] scale-[3]">
     <img :src="addFlag" class="invert" />
   </div>
 </template>

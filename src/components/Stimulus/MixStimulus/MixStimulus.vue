@@ -3,12 +3,12 @@
   <SSVEPStimulus v-if="ssvepStartFlag" />
   <TeethStimulus v-if="teethStartFlag" />
   <EyeStimulus v-if="eyeStartFlag" />
-  <RsvpStimulus v-if="rsvpStartFlag" />
+  <ErpStimulus v-if="erpStartFlag" />
 </template>
 
 <script lang="ts" setup>
-import RsvpStimulus from "@/components/Stimulus/RsvpStimulusShort.vue";
-// import RsvpStimulus from "@/components/Stimulus/P300Speller.vue";
+// import ErpStimulus from "@/components/Stimulus/MixStimulus/RsvpStimulusShort.vue";
+import ErpStimulus from "@/components/Stimulus/P300Speller.vue";
 // import SSVEPStimulus from "@/components/Stimulus/SSVEPStimulus9.vue";
 import SSVEPStimulus from "@/components/Stimulus/SSVEPStimulus4.vue";
 import RelaxStatus from "@/components/Stimulus/RelaxStatus.vue";
@@ -24,7 +24,7 @@ const store = useStore();
 const ssvepStartFlag: Ref<boolean> = ref(false);
 const teethStartFlag: Ref<boolean> = ref(false);
 const eyeStartFlag: Ref<boolean> = ref(false);
-const rsvpStartFlag: Ref<boolean> = ref(false);
+const erpStartFlag: Ref<boolean> = ref(false);
 const relaxStartFlag: Ref<boolean> = ref(false);
 
 
@@ -104,7 +104,7 @@ const startExperiment = async () => {
     }
     relaxStartFlag.value = false;
   }
-  
+
     // 休息1s
   relaxTime.value = 1
   relaxStartFlag.value = true;
@@ -178,7 +178,7 @@ const startExperiment = async () => {
   // rsvp开始
   for(let iter=0;iter<mixStimulusRsvpTrials.value;++iter){
 
-    rsvpStartFlag.value = true;
+    erpStartFlag.value = true;
     try {
       await Promise.race([
         new Promise((resolve) => {
@@ -187,17 +187,29 @@ const startExperiment = async () => {
         checkIsExperimentStop(stimulusStartFlag, mixStimulusRsvpDuration.value * 1000),
       ]);
     } catch (error) {
-      rsvpStartFlag.value = false;
+      erpStartFlag.value = false;
       console.log(error);
       return;
     }
-    rsvpStartFlag.value = false;
+    erpStartFlag.value = false;
 
-    // if(iter==0){
-    //   await new Promise((res)=>{
-    //   setTimeout(res,500)
-    // })
-    // }
+    if(iter===mixStimulusRsvpTrials.value-1) continue
+    // 休息1s
+    relaxTime.value = 1
+    relaxStartFlag.value = true;
+    try {
+      await Promise.race([
+        new Promise((resolve) => {
+          setTimeout(resolve, 1000);
+        }),
+        checkIsExperimentStop(stimulusStartFlag, 1000),
+      ]);
+    } catch (error) {
+      relaxStartFlag.value = false;
+      console.log(error);
+      return;
+    }
+    relaxStartFlag.value = false;
   }
 
 

@@ -1,14 +1,11 @@
 <template>
-    <div>
-        111
-    </div>
     <div class="parent">
         <div v-for="(num, index) in numbers"
         :key="index"
         :class="`s${num}`"
         :style="
         {
-          opacity: visited[Math.floor(num/6)][num%6]? '1' : '50%',
+          opacity: visited[Math.floor(num/6)][num%6]? '100%' : '50%',
         } as any
       "
         >
@@ -41,20 +38,24 @@ const numbers: Ref<number[]> = ref(
   Array.from({ length: 36 }, (_, index) => index),
 );
 
+const mixStimulusRsvpDuration =computed<number>(()=>(store.state.mixStimulusRsvpDuration))
+const oneStimulusDuration:number = (mixStimulusRsvpDuration.value / 12) * 1000
+
 onMounted(async() => {
     for(let i =0;i<6;i++){
+
         for(let j = 0;j<6;++j){
             visited.value[i][j] = 1
         }
         await new Promise((res)=>{
-            setTimeout(res,52)
+            setTimeout(res,oneStimulusDuration)
         })
         for(let j = 0;j<6;++j){
             visited.value[i][j] = 0
         }
-        await new Promise((res)=>{
-            setTimeout(res,52)
-        })
+        // await new Promise((res)=>{
+        //     setTimeout(res,oneStimulusDuration)
+        // })
     }
 
     for(let i =0;i<6;i++){
@@ -62,14 +63,14 @@ onMounted(async() => {
             visited.value[j][i] = 1
         }
         await new Promise((res)=>{
-            setTimeout(res,52)
+            setTimeout(res,oneStimulusDuration)
         })
         for(let j = 0;j<6;++j){
             visited.value[j][i] = 0
         }
-        await new Promise((res)=>{
-            setTimeout(res,52)
-        })
+        // await new Promise((res)=>{
+        //     setTimeout(res,oneStimulusDuration)
+        // })
     }
 })
 </script>

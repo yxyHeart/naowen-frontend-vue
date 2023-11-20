@@ -29,7 +29,7 @@
 
   <a-statistic-countdown
     :value="startRecordPredictDeadline"
-    class="ml-[45vw] mr-[45vw] mt-[25vh] scale-[2.5]"
+    class="ml-[47vw] mr-[45vw] mt-[25vh] scale-[2.5]"
     @finish="onRecordCountdownFinish"
     :value-style="{ color: '#3f8600' }"
     v-show="startRecordPredictCountDownShowFlag"

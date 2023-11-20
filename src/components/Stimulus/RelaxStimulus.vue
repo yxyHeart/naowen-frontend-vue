@@ -24,5 +24,4 @@ const duration: Ref<number> = computed(() => {
   return store.state.relaxTime;
 });
 
-
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <RelaxStatus v-if="relaxStartFlag" />
+  <RelaxStatus v-if="relaxStartFlag" :relaxTime="relaxTime"/>
   <SSVEPStimulus v-if="ssvepStartFlag" />
 </template>
 
@@ -9,13 +9,19 @@ import RelaxStatus from "@/components/Stimulus/RelaxStatus.vue";
 
 import { Ref, ref, computed, watch } from "vue";
 import { useStore } from "vuex";
+import sleep from '@/utils/sleep'
 
 const store = useStore();
 const ssvepStartFlag: Ref<boolean> = ref(false);
 const relaxStartFlag: Ref<boolean> = ref(false);
 
 const stimulusStartFlag: Ref<boolean> = computed(() => {
-  return (store.state.recordStartFlag || store.state.recordPredictStartFlag || store.state.recordValidStartFlag) && store.state.paradigm === "ssvep";
+  return (
+    store.state.recordStartFlag ||
+    store.state.recordPredictStartFlag || 
+    store.state.recordValidStartFlag
+    ) && 
+    store.state.paradigm === "ssvep";
 });
 
 const checkIsExperimentStop = (flag: Ref<boolean>, delayTime: number) => {
@@ -38,31 +44,16 @@ const ssvepTrials: Ref<number> = computed(() => {
 const ssvepTrialsDuration: Ref<number> = computed(() => {
   return store.state.ssvepTrialsDuration;
 });
+const relaxTime = ref<number>(10)
 const startExperiment = async () => {
   for (let i = 0; i < ssvepTrials.value; i++) {
-    // 休息1s
-    relaxStartFlag.value = true;
-    try {
-      await Promise.race([
-        new Promise((resolve) => {
-          setTimeout(resolve, 1000);
-        }),
-        checkIsExperimentStop(stimulusStartFlag, 1000),
-      ]);
-    } catch (error) {
-      relaxStartFlag.value = false;
-      console.log(error);
-      return;
-    }
-    relaxStartFlag.value = false;
 
     // ssvep 开始
     ssvepStartFlag.value = true;
     try {
       await Promise.race([
-        new Promise((resolve) => {
-          setTimeout(resolve, ssvepTrialsDuration.value * 1000);
-        }),
+        sleep(ssvepTrialsDuration.value * 1000),
+
         checkIsExperimentStop(
           stimulusStartFlag,
           ssvepTrialsDuration.value * 1000,
@@ -73,8 +64,22 @@ const startExperiment = async () => {
       console.log(error);
       return;
     }
-
     ssvepStartFlag.value = false;
+
+    // 休息10s
+    relaxStartFlag.value = true;
+    try {
+      await Promise.race([
+        sleep(10000),
+        checkIsExperimentStop(stimulusStartFlag, 10000),
+      ]);
+    } catch (error) {
+      relaxStartFlag.value = false;
+      console.log(error);
+      return;
+    }
+    relaxStartFlag.value = false;
+
   }
 
 };
