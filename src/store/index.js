@@ -18,7 +18,7 @@ export default createStore({
     mixStimulusSsvepTrials: 1, // 验证实验的混合范式中ssvep刺激 trial的个数
     mixStimulusSsvepTrialsDuration:3,
     mixStimulusSsvepStartFrequency: 8,
-    mixStimulusSsvepIntervalFrequency: 2,
+    mixStimulusSsvepIntervalFrequency: 0.5,
     mixStimulusTeethTrials:1,
     mixStimulusTeethDuration:1,
     mixStimulusRsvpFrequency: 5, // 验证实验的混合范式中rsvp刺激的频率

@@ -23,6 +23,7 @@ export function deviceStatusApi(){
 }
 
 export function createStimulusParamsApi(data:Experiment.CreateStimulusParamsRequestData){
+    console.log(data)
     return request({
         url:"setParams",
         method:"post",

@@ -30,6 +30,8 @@ const windowHeight = ref((window.innerHeight * 0.66).toString() + "px");
 let myChart: any = null;
 let getData: any = null;
 
+const signalLength = 500;
+
 const initChart = () => {
   const chartDom = chart.value;
 
@@ -41,7 +43,7 @@ const initChart = () => {
   }
 
   // data=[1,0,-1,1,2,6]
-  for (let i = 0; i < 800; i++) {
+  for (let i = 0; i < signalLength; i++) {
     for (let j = 0; j < channels.length; j++) {
       signals.value[j].push(0.5 + j * 1);
     }
@@ -71,7 +73,7 @@ const initChart = () => {
       show: false,
       type: "category",
       min: 0,
-      max: 800,
+      max: signalLength,
       splitLine: {
         show: false,
       },
@@ -119,7 +121,7 @@ const getD = async () => {
       throw new Error("no data received!");
     }
     for (let j = 0; j < channels.length; j++) {
-      signals.value[j] = signals.value[j].slice(update_len, 800);
+      signals.value[j] = signals.value[j].slice(update_len, signalLength);
       signals.value[j] = signals.value[j].concat(brainData[j]);
     }
     end.value += brainData[0].length;
