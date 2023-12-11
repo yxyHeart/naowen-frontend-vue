@@ -22,8 +22,8 @@ export default createStore({
     mixStimulusTeethTrials:1,
     mixStimulusTeethDuration:1,
     mixStimulusRsvpFrequency: 5, // 验证实验的混合范式中rsvp刺激的频率
-    mixStimulusRsvpTrials:0,
-    mixStimulusRsvpDuration:1.5,
+    mixStimulusRsvpTrials:1,
+    mixStimulusRsvpDuration:1,
 
 
     ssvepTrials: 10,
@@ -77,19 +77,31 @@ export default createStore({
     },
     mixStimulusAllTime(state) {
       return (
-        ((state.mixStimulusSsvepTrials * 3 + Math.max(0, state.mixStimulusSsvepTrials-1) * 1
-        + state.mixStimulusTeethTrials * state.mixStimulusTeethDuration + Math.max(0, state.mixStimulusTeethTrials-1)*1
-        + state.mixStimulusRsvpTrials * state.mixStimulusRsvpDuration + Math.max(0, state.mixStimulusRsvpTrials-1)*1
-        +(state.mixStimulusSsvepTrials > 0?1:0 + state.mixStimulusTeethTrials>0?1:0 + state.mixStimulusRsvpTrials>0?1:0 -1) *1
+        ((state.mixStimulusSsvepTrials * state.mixStimulusSsvepTrialsDuration
+        + state.mixStimulusTeethTrials * state.mixStimulusTeethDuration
+        + state.mixStimulusRsvpTrials * state.mixStimulusRsvpDuration
         + 10
         ) * state.mixStimulusAllTrials - 10) * 1000);
+      // return (
+      //   ((state.mixStimulusSsvepTrials * 3 + Math.max(0, state.mixStimulusSsvepTrials-1) * 1
+      //   + state.mixStimulusTeethTrials * state.mixStimulusTeethDuration + Math.max(0, state.mixStimulusTeethTrials-1)*1
+      //   + state.mixStimulusRsvpTrials * state.mixStimulusRsvpDuration + Math.max(0, state.mixStimulusRsvpTrials-1)*1
+      //   +(state.mixStimulusSsvepTrials > 0?1:0 + state.mixStimulusTeethTrials>0?1:0 + state.mixStimulusRsvpTrials>0?1:0 -1) *1
+      //   + 10
+      //   ) * state.mixStimulusAllTrials - 10) * 1000);
     },
     mixStimulusOneTrialTime(state) {
-      return (state.mixStimulusSsvepTrials * 3 + Math.max(0, state.mixStimulusSsvepTrials-1) * 1
-         + state.mixStimulusTeethTrials * state.mixStimulusTeethDuration + Math.max(0, state.mixStimulusTeethTrials-1)*1
-         + state.mixStimulusRsvpTrials * state.mixStimulusRsvpDuration + Math.max(0, state.mixStimulusRsvpTrials-1)*1
-         +(state.mixStimulusSsvepTrials > 0?1:0 + state.mixStimulusTeethTrials>0?1:0 + state.mixStimulusRsvpTrials>0?1:0 -1) *1
-         ) * 1000;
+      // return (state.mixStimulusSsvepTrials * 3 + Math.max(0, state.mixStimulusSsvepTrials-1) * 1
+      //    + state.mixStimulusTeethTrials * state.mixStimulusTeethDuration + Math.max(0, state.mixStimulusTeethTrials-1)*1
+      //    + state.mixStimulusRsvpTrials * state.mixStimulusRsvpDuration + Math.max(0, state.mixStimulusRsvpTrials-1)*1
+      //    +(state.mixStimulusSsvepTrials > 0?1:0 + state.mixStimulusTeethTrials>0?1:0 + state.mixStimulusRsvpTrials>0?1:0 -1) *1
+      //    ) * 1000;
+      return (
+        state.mixStimulusSsvepTrials * state.mixStimulusSsvepTrialsDuration
+        + state.mixStimulusTeethTrials * state.mixStimulusTeethDuration
+        + state.mixStimulusRsvpTrials * state.mixStimulusRsvpDuration
+
+        ) * 1000;
     },
     relaxAllTime(state){
       return state.relaxTime

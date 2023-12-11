@@ -7,8 +7,8 @@
 </template>
 
 <script lang="ts" setup>
-// import ErpStimulus from "@/components/Stimulus/MixStimulus/RsvpStimulusShort.vue";
-import ErpStimulus from "@/components/Stimulus/P300Speller.vue";
+import ErpStimulus from "@/components/Stimulus/MixStimulus/RsvpStimulusShort.vue";
+// import ErpStimulus from "@/components/Stimulus/P300Speller.vue";
 // import SSVEPStimulus from "@/components/Stimulus/SSVEPStimulus9.vue";
 import SSVEPStimulus from "@/components/Stimulus/SSVEPStimulus4.vue";
 import RelaxStatus from "@/components/Stimulus/RelaxStatus.vue";
@@ -106,21 +106,21 @@ const startExperiment = async () => {
   }
 
     // 休息1s
-  relaxTime.value = 1
-  relaxStartFlag.value = true;
-  try {
-    await Promise.race([
-      new Promise((resolve) => {
-        setTimeout(resolve, 1000);
-      }),
-      checkIsExperimentStop(stimulusStartFlag, 1000),
-    ]);
-  } catch (error) {
-    relaxStartFlag.value = false;
-    console.log(error);
-    return;
-  }
-  relaxStartFlag.value = false;
+  // relaxTime.value = 1
+  // relaxStartFlag.value = true;
+  // try {
+  //   await Promise.race([
+  //     new Promise((resolve) => {
+  //       setTimeout(resolve, 1000);
+  //     }),
+  //     checkIsExperimentStop(stimulusStartFlag, 1000),
+  //   ]);
+  // } catch (error) {
+  //   relaxStartFlag.value = false;
+  //   console.log(error);
+  //   return;
+  // }
+  // relaxStartFlag.value = false;
 
   // 咬牙开始
   for(let iter = 0;iter<mixStimulusTeethTrials.value;++iter){
