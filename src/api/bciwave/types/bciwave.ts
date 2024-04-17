@@ -1,2 +1,1 @@
-
-export type GetBciWaveData = ApiResponseData<number[][]>
+export type GetBciWaveData = ApiResponseData<{ wave: number[][] }>;

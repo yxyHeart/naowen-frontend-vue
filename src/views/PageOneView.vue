@@ -1,7 +1,7 @@
 <template>
 	<div
 		class="container ring-2 ring-offset-2 ring-offset-blue-300 hover:ring-offset-blue-500 w-[80%] flex justify-around items-center mx-auto my-[2%]"
-		v-show="!recordPredictStartFlag"
+		v-show="!recordStartFlag"
 	>
 		<ParadigmSelector />
 		<StimulusParamSetter />
@@ -28,11 +28,11 @@
 	</div>
 
 	<a-statistic-countdown
-		:value="startRecordPredictDeadline"
+		:value="countDownDeadline"
 		class="ml-[47vw] mr-[45vw] mt-[25vh] scale-[2.5]"
 		@finish="onRecordCountdownFinish"
 		:value-style="{ color: '#3f8600' }"
-		v-show="startRecordPredictCountDownShowFlag"
+		v-show="countDownShowFlag"
 	/>
 
 	<RsvpStimulus v-if="curParadigm === 'rsvp'" />
@@ -51,7 +51,6 @@ import RsvpStimulus from '@/components/Stimulus/RsvpStimulus.vue';
 import MiStimulus from '@/components/Stimulus/MiStimulus.vue';
 import SSVEPStimulusWithRelax from '@/components/Stimulus/SSVEPStimulusWithRelax.vue';
 import ParadigmSelector from '@/components/ParadigmSelector.vue';
-import MixStimulus from '@/components/Stimulus/MixStimulus/MixStimulus.vue';
 import StimulusParamSetter from '@/components/Stimulus/StimulusParamSetter.vue';
 import RelaxStimulus from '@/components/Stimulus/RelaxStimulus.vue';
 import MixStimulusWithRelax from '@/components/Stimulus/MixStimulus/MixStimulusWithRelax.vue';
@@ -63,106 +62,49 @@ const curParadigm = computed(() => {
 	return store.state.curParadigm;
 });
 
-const recordPredictStartFlag = computed(() => {
-	return store.state.recordPredictStartFlag;
+const recordStartFlag = computed(() => {
+	return store.state.recordStartFlag;
 });
 
-const stimulusTime = computed(() => {
-	let duration: number = 5 * 60 * 1000;
-	if (curParadigm.value === 'rsvp') {
-		duration = store.getters.rsvpAllTime;
-	} else if (curParadigm.value === 'ssvep') {
-		duration = store.getters.ssvepAllTime;
-	} else if (curParadigm.value === 'mi') {
-		duration = store.getters.miAllTime;
-	} else if (curParadigm.value === 'mixStimulus') {
-		duration = store.getters.mixStimulusAllTime;
-	} else if (curParadigm.value === 'relax') {
-		duration = store.getters.relaxAllTime;
-	}
-
-	return duration;
+const allTrialsTime = computed(() => {
+	return store.getters.getAllTrialsTimeByParadigm(curParadigm.value);
 });
 
 const start = ref(false);
 
-// const onFinish = () => {
-//   console.log("finish");
-// };
-// const deadline = ref(Date.now() + 1000 * 0);
-
-const startRecordPredictDeadline = ref(Date.now() + 1000 * 0);
-const startRecordPredictCountDownShowFlag = ref(false);
+const countDownDeadline = ref(Date.now() + 1000 * 0);
+const countDownShowFlag = ref(false);
 
 const onRecordCountdownFinish = () => {
-	startRecordPredictCountDownShowFlag.value = false;
+	countDownShowFlag.value = false;
 };
 
 const startRecord = async () => {
 	const waitExperimentStartTime = 5 * 1000;
-	startRecordPredictCountDownShowFlag.value = true;
-	startRecordPredictDeadline.value = Date.now() + waitExperimentStartTime;
+	countDownShowFlag.value = true;
+	countDownDeadline.value = Date.now() + waitExperimentStartTime;
 	bcigoApi();
 	await new Promise(res => {
 		setTimeout(res, waitExperimentStartTime);
 	});
-	startPredictApi()
-		.then(() => {
-			ElMessage({
-				message: '开始采集脑电数据',
-				type: 'success'
-			});
-		})
-		.catch(function(error: any) {
-			ElMessage({
-				message: error,
-				type: 'error'
-			});
-		});
+	startPredictApi();
 
-	const loading = ElLoading.service({
-		lock: true,
-		text: 'Loading',
-		background: 'rgba(0, 0, 0, 0.7)'
-	});
+	store.commit('startRecord');
 
 	setTimeout(() => {
-		loading.close();
-	}, 200);
-
-	store.commit('startRecordPredict');
-
-	const mixStimulusOneTrialTime = computed(() => {
-		return store.getters.mixStimulusOneTrialTime;
-	});
-	setTimeout(() => {
-		store.commit('startPredict');
-	}, mixStimulusOneTrialTime.value);
-	setTimeout(() => {
-		let timer = setInterval(() => {
-			if (!recordPredictStartFlag.value) {
-				clearInterval(timer);
-				return;
-			}
-			store.commit('startPredict');
-		}, mixStimulusOneTrialTime.value + 10 * 1000);
-	}, mixStimulusOneTrialTime.value);
-
-	setTimeout(() => {
-		store.commit('startPredict');
-		store.commit('stopRecordPredict');
-	}, stimulusTime.value);
+		store.commit('stopRecord');
+	}, allTrialsTime.value);
 };
 
-watch(start, async (newstatus, oldstatus) => {
-	if (oldstatus === false && newstatus === true) {
+watch(start, async (newStatus, oldStatus) => {
+	if (oldStatus === false && newStatus === true) {
 		startRecord();
 		start.value = true;
 		// 手动关实验
 	} else if (
-		oldstatus === true &&
-		newstatus === false &&
-		recordPredictStartFlag.value
+		oldStatus === true &&
+		newStatus === false &&
+		recordStartFlag.value
 	) {
 		localStorage.clear();
 		sessionStorage.clear();
@@ -171,8 +113,8 @@ watch(start, async (newstatus, oldstatus) => {
 	}
 });
 
-watch(recordPredictStartFlag, async newStstus => {
-	if (!newStstus) {
+watch(recordStartFlag, async newStatus => {
+	if (!newStatus) {
 		start.value = false;
 		const loading = ElLoading.service({
 			lock: true,

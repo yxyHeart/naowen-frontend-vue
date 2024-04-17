@@ -4,7 +4,7 @@ import type * as BciWave from "./types/bciwave"
 
 export function getBciWaveDataApi(){
     return request<BciWave.GetBciWaveData>({
-        url: "getdata18",
+        url: "wave",
         method: "get",
       })
 }
